@@ -61,15 +61,11 @@
                 <a href="#" class="navbar-brand d-flex align-items-center">
                     <strong>HOME</strong>
                 </a>
-                <a href="" class="navbar-brand d-flex align-items-center">
-                    <strong>SELENIUM</strong>
+                @foreach($categories as $item)
+                <a href="{{ $item->slug }}" class="navbar-brand d-flex align-items-center">
+                    <strong>{{ $item->name }}</strong>
                 </a>
-                <a href="" class="navbar-brand d-flex align-items-center">
-                    <strong>ABOUT ME</strong>
-                </a>
-                <a href="" class="navbar-brand d-flex align-items-center">
-                    <strong>D</strong>
-                </a>
+                @endforeach
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation" hidden="true">
                     <span class="navbar-toggler-icon"></span>
                 </button>

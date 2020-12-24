@@ -20,35 +20,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/10.12.5/sweetalert2.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
     <style>
-        body {
-            overflow-y:scroll;
-        }
-
-        .table {
-            width: 100% !important;
-            overflow-x:scroll;
-        }
-
-        table .btn {
-            padding: 0;
-            width: 30px;
-            height: 30px;
-        }
-
         .ck-content {
             color: black !important;
-        }
-
-        .hiden {
-            display: none;
-        }
-
-        tbody tr:hover .hoverBtn {
-            display: block;
-        }
-
-        .content-wrapper {
-            padding-bottom: 0px !important;
         }
     </style>
 </head>
@@ -96,13 +69,13 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ route('categories') }}" class="nav-link">
+                                    <a href="{{ route('categories') }}" class="nav-link active">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Danh mục</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ route('posts') }}" class="nav-link active">
+                                    <a href="{{ route('posts') }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Bài viết</p>
                                     </a>
@@ -131,7 +104,7 @@
                         <div class="col-sm-6">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active">Bài viết</li>
+                                <li class="breadcrumb-item active">Danh mục</li>
                             </ol>
                         </div><!-- /.col -->
                         <div class="col-sm-6">
@@ -148,16 +121,21 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card" style="padding: 5px;">
+                                <div class="card-header">
+                                    <h5 class="card-title">Danh sách bài viết</h5>
+
+                                </div>
+                                <!-- /.card-header -->
                                 <div class="card-body" style="padding: 0px;">
                                     <!-- /.row -->
-                                    <table class="table table-hover table-bordered" id="tablePost">
+                                    <table class="table" id="tableCategory">
                                         <thead>
                                             <tr>
                                                 <th scope="col">#</th>
+                                                <th scope="col">Danh mục</th>
+                                                <th scope="col">Đường dẫn</th>
                                                 <th scope="col">Hình ảnh</th>
-                                                <th scope="col">Tiêu đề</th>
                                                 <th scope="col">Nội dung</th>
-                                                <th scope="col">Ngày tạo</th>
                                                 <th scope="col">Hành động</th>
                                             </tr>
                                         </thead>  
@@ -176,87 +154,36 @@
         <!-- /.content-wrapper -->
 
         <!-- Modal thêm mới bài viết -->
-        <div id="modalAddPost" class="modal modal1" tabindex="-1" role="dialog">
+        <div id="modalAddCategory" class="modal modal1" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Thêm mới bài viết</h5>
+                        <h5 class="modal-title">Thêm mới danh mục</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form id="formAddPost">
+                        <form id="formAddCategory">
                             @csrf
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                             <div class="mb-3">
-                                <label for="title" class="form-label">Tiêu đề bài viết</label>
-                                <input type="email" class="form-control" id="title" onkeyup="ChangeToSlug();" placeholder="Nhập tiêu đề của bài viết">
+                                <label for="name" class="form-label">Danh mục bài viết</label>
+                                <input type="text" class="form-control" id="name" onkeyup="ChangeToSlug();" placeholder="Nhập tên danh mục">
                             </div>
                             <div class="mb-3">
-                                <label for="slug" class="form-label">Đường dẫn bài viết</label>
-                                <input type="email" class="form-control" id="slug" placeholder="Nhập tiêu đề của bài viết">
+                                <label for="slug" class="form-label">Đường dẫn danh mục</label>
+                                <input type="text" class="form-control" id="slug" placeholder="Đường dẫn của danh mục">
                             </div>
                             <div class="mb-3">
-                                <label for="category" class="form-label">Danh mục bài viết</label>
-                                <select class="selectpicker form-control" id="category" data-live-search="true" title="Chọn danh mục bài viết">
-                                    @foreach($categories as $item)
-                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                    @endforeach
-                                </select> 
-                            </div>
-                            <div class="mb-3">
-                                <label for="content" class="form-label">Nội dung bài viết</label>
-                                <textarea id="content"></textarea>
+                                <label for="content" class="form-label">Nội dung danh mục</label>
+                                {{-- <textarea id="content"></textarea> --}}
+                                <input type="text" class="form-control" id="content" placeholder="Nội dung của danh mục">
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnAddPost" type="submit" class="btn btn-primary">Thêm mới</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {{-- Cập nhật bài viết --}}
-        <div id="modalUpdatePost" class="modal modal1" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Cập nhật bài viết</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="formUpdatePost">
-                            @csrf
-                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                            <div class="mb-3">
-                                <label for="title_up" class="form-label">Tiêu đề bài viết</label>
-                                <input type="email" class="form-control" id="title_up" onkeyup="ChangeToSlug();" placeholder="Nhập tiêu đề của bài viết">
-                            </div>
-                            <div class="mb-3">
-                                <label for="slug_up" class="form-label">Đường dẫn bài viết</label>
-                                <input type="email" class="form-control" id="slug_up" placeholder="Nhập tiêu đề của bài viết">
-                            </div>
-                            @if(isset($categories))
-                            <div class="mb-3">
-                                <label for="category_up" class="form-label">Danh mục bài viết</label>
-                                <select class="selectpicker form-control" id="category_up" data-live-search="true" title="Chọn danh mục bài viết">
-                                    @foreach($categories as $item)
-                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                    @endforeach
-                                </select> 
-                            </div>
-                            @endif
-                            <div class="mb-3">
-                                <label for="content_up" class="form-label">Nội dung bài viết</label>
-                                <textarea id="content_up"></textarea>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button id="btnUpdatePost" type="submit" class="btn btn-primary">Cập nhật</button>
+                        <button id="btnAddCategory" type="submit" class="btn btn-primary">Thêm mới</button>
                     </div>
                 </div>
             </div>
@@ -301,16 +228,16 @@
     <script src="https://cdn.datatables.net/1.10.23/js/dataTables.bootstrap4.min.js"></script>
     {{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
-    <script type="text/javascript" src="/js/post.js"></script>
+    <script type="text/javascript" src="/js/category.js"></script>
     <script type="text/javascript">
         function ChangeToSlug() {
-            var title, slug;
+            var name, slug;
 
-            //Lấy text từ thẻ input title 
-            title = document.getElementById("title").value;
+            //Lấy text từ thẻ input name 
+            name = document.getElementById("name").value;
 
             //Đổi chữ hoa thành chữ thường
-            slug = title.toLowerCase();
+            slug = name.toLowerCase();
 
             //Đổi ký tự có dấu thành không dấu
             slug = slug.replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, 'a');

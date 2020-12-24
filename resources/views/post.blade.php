@@ -7,10 +7,12 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.79.0">
-    <title>[CÂU CHUYỆN THÀNH CÔNG] ĐIỀU GÌ XẢY RA KHI ĐỘNG LỰC CỦA BẠN LÀ TUỔI TÁC?</title>
+    <title>{{ $post->title }}</title>
     <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/product/">
     <!-- Bootstrap core CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <link href="/css/product.css" rel="stylesheet">
+    <link href="/css/carousel.css" rel="stylesheet">
     <style>
         body {
         font-family: 'Quicksand';
@@ -82,20 +84,10 @@
     </header>
     <main>
         <div class="container" style="padding-top: 100px">
-            <h1>[CÂU CHUYỆN THÀNH CÔNG] ĐIỀU GÌ XẢY RA KHI ĐỘNG LỰC CỦA BẠN LÀ TUỔI TÁC?</h1>
-            <p class="text-center">By: Đức Anh - 20/12/2020</p>
+            <h1>{{ $post->title }}</h1>
+            <p class="text-center">By: Đức Anh - {{ $post->created_at}}</p>
             <hr class="featurette-divider">
-            <p>Dưới đây là câu chuyện theo đuổi đam mê của bạn Chiến – học viên đã bắt đầu đi thực tập tại một công ty công nghệ sau 1 tháng học tập tại CodersX và hiện nay đã trở thành nhân viên chính thức.
-            </p>
-            <p>Hãy cùng nhau xem phương pháp học tập và những trải nghiệm của bạn ấy nhé!</p>
-            <p>PV: Chào Chiến, bạn tham gia học tập tại hệ thống CodersX bao lâu rồi nhỉ?
-                Chiến: Mình có xem các video của anh Thịnh trên CodersX cũng lâu rồi, khoảng tầm đợt Tết đấy.</p>
-            <p>PV: Ngoài CodersX thì bạn có học tại hệ thống nào khác không?</p>
-            <p>Chiến: Tại kênh của CodersX mình chủ yếu học về JavaScript và NodeJS vì mình thấy cũng chưa có kênh nào ở Việt Nam có được bài giảng hay hơn. Hiện mình đang vận dụng rất nhiều các kiến thức này trong quá trình làm việc. Còn về phần ReactJS theo mình, các video của anh Thịnh về phần ReactJS cũng chưa đầy đủ lắm nên mình có xem thêm trên youtube để bổ sung kiến thức. 😆</p>
-            <p>PV: Quào, mình xem đây là một lời khen có cánh cho team nhé! Chúng mình sẽ cố gắng hơn để hoàn thiện chất lượng hơn và mang đến trải nghiệm tốt hơn cho học viên. Vậy mỗi ngày bạn sẽ dành ra trung bình bao nhiêu thời gian để học tập?</p>
-            <p>Chiến: Mỗi ngày mình dành trung bình khoảng 2 tiếng để làm bài tập, còn xem video thì mất nhiều thời gian hơn, nói chung cũng rơi vào khoảng 3 – 4 tiếng á. Mình học cũng ít chứ không nhiều, chủ yếu xem video rồi làm bài tập, có ý tưởng là bắt tay lên code liền. Một tháng sau là mình xin đi thực tập rồi.</p>
-            <p> PV: Bạn đi thực tập sớm nhỉ. Đâu là động lực để bạn quyết định thực tập sớm như vậy?</p>
-            <p>Chiến: Thật ra động lực lớn nhất là do tuổi tác của mình á. Mình cũng tương đối lớn tuổi trong ngành lập trình này. Nếu so ra bằng tuổi mình thì các bạn khác cũng đã có 3 – 4 năm kinh nghiệm về lập trình web rồi. Các bạn trẻ hơn mình thì ít nhất cũng được 1 năm kinh nghiệm, chưa kể tư duy lập trình lại nhạy bén và cập nhật công nghệ rất nhanh.</p>
+            <p>{{ $post->content }}</p>
             <hr class="featurette-divider">
         </div>
     </main>

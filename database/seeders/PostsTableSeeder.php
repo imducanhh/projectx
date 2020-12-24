@@ -16,6 +16,7 @@ class PostsTableSeeder extends Seeder
         \DB::table('posts')->insert([
             'title'  => 'Học lập trình Laravel',
             'slug' => 'hoc-lap-trinh-laravel',
+            'category_id' => '1',
             'image' => 'santa.jpg',
             'content' => 'Nội dung học bài Todo'
         ]);

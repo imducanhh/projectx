@@ -62,6 +62,12 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a href="{{ route('categories') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Danh mục</p>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a href="{{ route('posts') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Bài viết</p>

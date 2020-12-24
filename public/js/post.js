@@ -1,5 +1,6 @@
 $(document).ready(function() {
-
+    $('select').selectpicker();
+    
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -24,46 +25,25 @@ $(document).ready(function() {
         "hideMethod": "fadeOut"
     }
 
-    function ChangeToSlug() {
-        var title, slug;
-
-        //Lấy text từ thẻ input title 
-        title = document.getElementById("title").value;
-
-        //Đổi chữ hoa thành chữ thường
-        slug = title.toLowerCase();
-
-        //Đổi ký tự có dấu thành không dấu
-        slug = slug.replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, 'a');
-        slug = slug.replace(/é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ/gi, 'e');
-        slug = slug.replace(/i|í|ì|ỉ|ĩ|ị/gi, 'i');
-        slug = slug.replace(/ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ/gi, 'o');
-        slug = slug.replace(/ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự/gi, 'u');
-        slug = slug.replace(/ý|ỳ|ỷ|ỹ|ỵ/gi, 'y');
-        slug = slug.replace(/đ/gi, 'd');
-        //Xóa các ký tự đặt biệt
-        slug = slug.replace(/\`|\~|\!|\@|\#|\||\$|\%|\^|\&|\*|\(|\)|\+|\=|\,|\.|\/|\?|\>|\<|\'|\"|\:|\;|_/gi, '');
-        //Đổi khoảng trắng thành ký tự gạch ngang
-        slug = slug.replace(/ /gi, "-");
-        //Đổi nhiều ký tự gạch ngang liên tiếp thành 1 ký tự gạch ngang
-        //Phòng trường hợp người nhập vào quá nhiều ký tự trắng
-        slug = slug.replace(/\-\-\-\-\-/gi, '-');
-        slug = slug.replace(/\-\-\-\-/gi, '-');
-        slug = slug.replace(/\-\-\-/gi, '-');
-        slug = slug.replace(/\-\-/gi, '-');
-        //Xóa các ký tự gạch ngang ở đầu và cuối
-        slug = '@' + slug + '@';
-        slug = slug.replace(/\@\-|\-\@|\@/gi, '');
-        //In slug ra textbox có id “slug”
-        document.getElementById('slug').value = slug;
-    }
-
-    // CKediter
     ClassicEditor
-        .create(document.querySelector('#content'), )
-        .catch(error => {
-            console.error(error);
-        });
+        .create( document.querySelector( '#content' ), {
+            image: {
+                toolbar: [ 'imageTextAlternative' ]
+            }
+        } )
+        .catch( error => {
+            // console.error( error );
+        } );
+
+    ClassicEditor
+        .create( document.querySelector( '#content_up' ), {
+            image: {
+                toolbar: [ 'imageTextAlternative' ]
+            }
+        } )
+        .catch( error => {
+            // console.error( error );
+        } );
 
     // Hiển thị modal thêm mới bài viết
     $('#btnAdd').on('click', function() {
@@ -75,12 +55,14 @@ $(document).ready(function() {
         e.preventDefault();
         var title = document.getElementById('title').value;
         var slug = document.getElementById('slug').value;
+        var category = document.getElementById('category').value;
         var content = document.getElementById('content').value;
         $.ajax({
             url: '/admin/addpost-process',
             data: {
                 title: title,
                 slug: slug,
+                category: category,
                 content: content
             },
             dataType: 'json',
@@ -98,38 +80,90 @@ $(document).ready(function() {
         });
     });
 
+    // Cập nhật bài viết
+    $(document).on('click', '.btn-update', function(e) {
+        e.preventDefault();
+        let id = $(this).data('id');
+        $.ajax({
+            url: '/admin/getpost-process/'+id,
+            success: function(res) {
+                if (res.post != null) {
+                    $('#modalUpdatePost').modal('toggle');
+                    $('#title_up').val(res.post.title);
+                    $('#slug_up').val(res.post.slug);
+                    // $('#content_up').val(res.post.content);
+                } else if (res.post == null) {
+                    toastr["error"]("Thêm mới thất bại!");
+                }
+            }
+        });
+    });
+
+    // Cập nhật bài viết
+    $('#btnUpdatePost').on('click', function(e) {
+        e.preventDefault();
+        var title = document.getElementById('title_up').value;
+        var slug = document.getElementById('slug_up').value;
+        var category_id = document.getElementById('category_up').value;
+        var content = document.getElementById('content_up').value;
+        $.ajax({
+            url: '/admin/updatepost-process',
+            data: {
+                title: title,
+                slug: slug,
+                category_id: category_id,
+                content: content
+            },
+            dataType: 'json',
+            type: 'post',
+            cache: false,
+            success: function(res) {
+                if (res.message == 1) {
+                    toastr["success"]("Cập nhật thành công!");
+                    $('#tablePost').DataTable().ajax.reload();
+                    $('#modalUpdatePost').modal('hide');
+                } else if (res.message == 0) {
+                    toastr["error"]("Cập nhật thất bại!");
+                }
+            }
+        });
+    });
+
     // Xóa bài viết
     $(document).on('click', '.btn-delete', function(e) {
         var id = $(this).data('id');
 
         // toastr["success"]("My name is Inigo Montoya. You killed my father. Prepare to die!");
 
-        swal({
-            title: "Bạn có chắc chắn xóa bài viết này không?",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true,
-        }).then((willDelete) => {
-            if (willDelete) {
-                $.ajax({
-                    type: 'get',
-                    url: '/delete-post/'+id,
-                    success: function() {
-                        swal("Bài viết đã bị xóa!", {
-                            icon: "success",
-                        });
-                        $('#tablePost').DataTable().ajax.reload();
-                    }
-                })
-            }
-        });
+        // swal({
+        //     title: "Bạn có chắc chắn xóa bài viết này không?",
+        //     icon: "warning",
+        //     buttons: true,
+        //     dangerMode: true,
+        // }).then((willDelete) => {
+        //     if (willDelete) {
+        //         $.ajax({
+        //             type: 'get',
+        //             url: '/delete-post/'+id,
+        //             success: function() {
+        //                 swal("Bài viết đã bị xóa!", {
+        //                     icon: "success",
+        //                 });
+        //                 $('#tablePost').DataTable().ajax.reload();
+        //             }
+        //         })
+        //     }
+        // });
     })
 
     // Datatable của bài viết
     $('#tablePost').DataTable({
+        "targets": 'no-sort',
+        "bSort": false,
+        "order": [],
         "language": {
             processing: "Đang xử lý...",
-            search: "Tìm kiếm: &nbsp;:",
+            search: "Tìm kiếm: &nbsp;",
             lengthMenu: "Xem _MENU_ mục",
             info: "Đang xem _START_ đến _END_ trong tổng số _TOTAL_ mục",
             infoEmpty: "Đang xem 0 đến 0 trong tổng số 0 mục",
@@ -149,19 +183,20 @@ $(document).ready(function() {
                 sortDescending: ": Sắp xếp cột theo thứ tự giảm dần"
             }
         },
+        "bLengthChange": false,
         processing: true,
         serverSide: true,
-        // ajax: '/admin/getposts',
         ajax: {
             url: '/admin/getposts',
             type: 'post'
         },
         columns: [
-            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-            { data: 'title', name: 'title' },
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, width: '4%'},
+            { data: 'image', name: 'image', searchable: false, width: '10%' },
+            { data: 'title', name: 'title',width: '21%' },
             { data: 'content', name: 'content' },
-            { data: 'action', name: 'action', orderable: false, searchable: false }
+            { data: 'created_at', name: 'created_at', width: '11%' },
+            { data: 'action', name: 'action', orderable: false, searchable: false, width: '15%' }
         ],
     });
-
 });

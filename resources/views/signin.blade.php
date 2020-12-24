@@ -11,28 +11,51 @@
     <!-- Bootstrap core CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <style>
-        .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        user-select: none;
-      }
-      form {
-        font-family: 'Quicksand';
-      }
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            position: relative;
 
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
         }
-      }
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        .form-signin {
+            z-index: 100;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        form {
+            font-family: 'Quicksand';
+        }
+
+        #particle-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
     </style>
     <!-- Custom styles for this template -->
     <link href="/css/signin.css" rel="stylesheet">
 </head>
 
-<body class="text-center">
+<body class="text-center"  id="particle-canvas">
     <main class="form-signin">
         <form id="formSignIn">
             @csrf
@@ -48,11 +71,12 @@
                     <input type="checkbox" value="remember-me"> Remember me
                 </label>
             </div> -->
-            <button id="btnSignIn" class="w-100 btn btn-lg btn-primary" type="submit" disabled="disable">Đăng nhập</button>
+            <button id="btnSignIn" class="w-100 btn btn-lg btn-primary" type="submit" disabled="disable" hidden="true">Đăng nhập</button>
             <!-- <p class="mt-5 mb-3 text-muted">&copy; 2017-2020</p> -->
         </form>
     </main>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.js" integrity="sha512-WNLxfP/8cVYL9sj8Jnp6et0BkubLP31jhTG9vhL/F5uEZmg5wEzKoXp1kJslzPQWwPT1eyMiSxlKCgzHLOTOTQ==" crossorigin="anonymous"></script>
+    <script src="/js/admin_signin.js"></script>
     <script type="text/javascript">
         $.ajaxSetup({
             headers: {
@@ -61,11 +85,17 @@
         });
 
         $('.form-control').on('keydown', function(){
+            var email = document.getElementById('inputEmail').value;
+            if (email == "imducanhh@gmail.com") {
+                $('#btnSignIn').removeAttr(hidden);
+            } else {
+                $('#btnSignIn').attr('hidden', 'true');
+            }
             $('.form-control').removeClass('border border-danger');
             $('#btnSignIn').removeAttr('disabled');
         });
 
-        $('inputPassword').on('keydown', function(e) {
+        $('#inputPassword').on('keydown', function(e) {
             if (e.which == 13) {
                 e.preventDefault();
                 document.getElementById('btnSignIn').click();
