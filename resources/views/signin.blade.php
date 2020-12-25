@@ -21,6 +21,11 @@
             position: relative;
 
         }
+        
+        .form-signin {
+            display: none;
+        }
+
         .bd-placeholder-img {
             font-size: 1.125rem;
             text-anchor: middle;
@@ -84,13 +89,19 @@
             }
         });
 
+        $(document).on('keydown', function(e){
+            if (e.which == 13) {
+                $('.form-signin').css('display', 'block');
+            }
+        });
+
         $('.form-control').on('keydown', function(){
             var email = document.getElementById('inputEmail').value;
-            if (email == "imducanhh@gmail.com") {
-                $('#btnSignIn').removeAttr(hidden);
-            } else {
-                $('#btnSignIn').attr('hidden', 'true');
-            }
+            // if (email == "imducanhh@gmail.com") {
+            //     $('#btnSignIn').removeAttr(hidden);
+            // } else {
+            //     $('#btnSignIn').attr('hidden', 'true');
+            // }
             $('.form-control').removeClass('border border-danger');
             $('#btnSignIn').removeAttr('disabled');
         });

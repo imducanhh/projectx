@@ -132,28 +132,29 @@ $(document).ready(function() {
     // Xóa bài viết
     $(document).on('click', '.btn-delete', function(e) {
         var id = $(this).data('id');
-
-        // toastr["success"]("My name is Inigo Montoya. You killed my father. Prepare to die!");
-
-        // swal({
-        //     title: "Bạn có chắc chắn xóa bài viết này không?",
-        //     icon: "warning",
-        //     buttons: true,
-        //     dangerMode: true,
-        // }).then((willDelete) => {
-        //     if (willDelete) {
-        //         $.ajax({
-        //             type: 'get',
-        //             url: '/delete-post/'+id,
-        //             success: function() {
-        //                 swal("Bài viết đã bị xóa!", {
-        //                     icon: "success",
-        //                 });
-        //                 $('#tablePost').DataTable().ajax.reload();
-        //             }
-        //         })
-        //     }
-        // });
+        swal({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    type: 'get',
+                    url: '/delete-post/'+id,
+                    success: function() {
+                        swal("Bài viết đã bị xóa!", {
+                            icon: "success",
+                            position: 'top-end',
+                            showConfirmButton: false,
+                        });
+                        $('#tablePost').DataTable().ajax.reload();
+                    }
+                })
+            }
+        });
     })
 
     // Datatable của bài viết
